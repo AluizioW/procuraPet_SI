@@ -62,7 +62,7 @@ Inicie o servidor
 
 #### Registrar Usuário
 
-```http
+```bash
   POST /api/usuarios/registrar
 ```
 
@@ -78,7 +78,7 @@ Inicie o servidor
 
 #### Fazer Login
 
-```http
+```bash
   POST /api/usuarios/login
 ```
 
@@ -90,7 +90,7 @@ Inicie o servidor
 
 #### Retorna dados do Usuário
 
-```http
+```bash
   GET /api/usuarios/meuperfil
 ```
 
