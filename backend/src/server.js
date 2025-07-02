@@ -1,11 +1,25 @@
+const https = require("https");
+const fs = require("fs");
+const path = require("path"); // Adicione esta linha
+require("dotenv").config();
+
 const app = require('./app'); 
 const db = require('./config/db'); 
 
 const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, async () => {
+const options = {
+  key: fs.readFileSync(path.join(__dirname, "../ssl/server.key")), // ../ sobe da pasta "src" para "api"
+  cert: fs.readFileSync(path.join(__dirname, "../ssl/server.cert")),
+};
+
+https.createServer(options, app).listen(PORT, () => {
+  console.log(`Servidor HTTPS rodando na porta ${PORT}`);
+});
+
+app.listen(PORT, '0.0.0.0', async () => {
   console.log(`[Server] Servidor da API ProcuraPet rodando na porta ${PORT}`);
-  console.log(`[Server] Acesse http://localhost:${PORT}/api para verificar o status da API.`);
+  console.log(`[Server] Acesse https://localhost:${PORT}/api para verificar o status da API.`);
 
   try {
     const queryResult = await db.query('SELECT NOW() as now');

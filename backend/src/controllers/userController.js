@@ -13,43 +13,43 @@ const generateToken = (idUsuario, tipoUsuario) => {
 };
 
 const registrarUsuario = async (req, res, next) => {
-    const { nome, email, senha, username, telefone, idEndereco, foto, descricao } = req.body;
+    const { nomeUsuario, email, senha, username, telefone, idEndereco, fotoUsuario, descricaoUsuario } = req.body;
 
-    if (!nome || !email || !senha || !username || !telefone || !idEndereco) {
+    if (!nomeUsuario || !email || !senha ) {
         return res.status(400).json({
-            message: 'Campos obrigatórios: nome, email, senha, username, telefone e idEndereco.'
+            message: 'Campos obrigatórios: nomeUsuario, email e senha'
         });
     }
 
     try {
-        let queryText = 'SELECT email FROM procuraPet_v2.usuario WHERE email = ?';
+        let queryText = 'SELECT email FROM procuraPet_v3.usuario WHERE email = ?';
         let resultsEmail = await db.query(queryText, [email]); 
         if (resultsEmail.length > 0) {
             console.warn(`[User Register] Tentativa de registro com email já existente: ${email}`);
             return res.status(400).json({ message: 'Este email já está cadastrado.' });
         }
 
-        queryText = 'SELECT username FROM procuraPet_v2.usuario WHERE username = ?';
-        let resultsUsername = await db.query(queryText, [username]);
-        if (resultsUsername.length > 0) {
-            console.warn(`[User Register] Tentativa de registro com username já existente: ${username}`);
-            return res.status(400).json({ message: 'Este username já está em uso.' });
-        }
+        // queryText = 'SELECT username FROM procuraPet_v3.usuario WHERE username = ?';
+        // let resultsUsername = await db.query(queryText, [username]);
+        // if (resultsUsername.length > 0) {
+        //     console.warn(`[User Register] Tentativa de registro com username já existente: ${username}`);
+        //     return res.status(400).json({ message: 'Este username já está em uso.' });
+        // }
 
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(senha, salt);
-        const statusContaPadrao = 'ativo';
+        const statusContaPadrao = 'inativo';
         const tipoUsuarioPadrao = 'padrao'; 
 
         const insertQuery = `
-            INSERT INTO procuraPet_v2.usuario 
-                (nome, email, senha, username, telefone, idEndereco, statusConta, tipoUsuario, foto, descricao) 
+            INSERT INTO procuraPet_v3.usuario 
+                (nomeUsuario, email, senha, username, telefone, idEndereco, statusConta, tipoUsuario, fotoUsuario, descricaoUsuario) 
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
         `;
 
         const resultInsert = await db.query(insertQuery, [
-            nome, email, hashedPassword, username, telefone,
-            idEndereco, statusContaPadrao, tipoUsuarioPadrao, foto || null, descricao || null
+            nomeUsuario, email, hashedPassword, username || "Pet Friend", telefone || "0000000000",
+            idEndereco || null, statusContaPadrao, tipoUsuarioPadrao, fotoUsuario || null, descricaoUsuario || null
         ]);
 
         const idNovoUsuario = resultInsert.insertId;
@@ -66,7 +66,7 @@ const registrarUsuario = async (req, res, next) => {
             message: 'Usuário registrado com sucesso!',
             data: {
                 idUsuario: idNovoUsuario,
-                nome,
+                nomeUsuario,
                 email,
                 username,
                 telefone,
@@ -91,7 +91,7 @@ const loginUsuario = async (req, res, next) => {
     }
 
     try {
-        const queryText = 'SELECT idUsuario, nome, email, username, senha, tipoUsuario, statusConta FROM procuraPet_v2.usuario WHERE email = ?';
+        const queryText = 'SELECT idUsuario, nomeUsuario, email, username, senha, tipoUsuario, statusConta FROM procuraPet_v3.usuario WHERE email = ?';
         const usuarios = await db.query(queryText, [email]); 
 
         if (usuarios.length === 0) {
@@ -119,7 +119,7 @@ const loginUsuario = async (req, res, next) => {
 
         res.status(200).json({
             idUsuario: usuario.idUsuario,
-            nome: usuario.nome,
+            nomeUsuario: usuario.nomeUsuario,
             email: usuario.email,
             username: usuario.username,
             tipoUsuario: usuario.tipoUsuario, 
@@ -138,8 +138,8 @@ const getMeuPerfil = async (req, res, next) => {
 
     try {
         const queryText = `
-            SELECT idUsuario, nome, email, username, tipoUsuario, telefone, foto, descricao, idEndereco, statusConta 
-            FROM procuraPet_v2.usuario 
+            SELECT idUsuario, nomeUsuario, email, username, tipoUsuario, telefone, fotoUsuario, descricaoUsuario, idEndereco, statusConta 
+            FROM procuraPet_v3.usuario 
             WHERE idUsuario = ?;
         `;
         const usuarios = await db.query(queryText, [idUsuarioLogado]);

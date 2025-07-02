@@ -4,6 +4,8 @@ const express = require('express');
 const cors = require('cors');
 
 const userRoutes = require('./routes/userRoutes');
+const postRoutes = require('./routes/postRoutes');
+const feedRoutes = require('./routes/feedRoutes');
 
 const app = express();
 
@@ -25,6 +27,8 @@ app.get('/api', (req, res) => {
 });
 
 app.use('/api/usuarios', userRoutes);
+app.use('/api/post', postRoutes);
+app.use('/api/feed', feedRoutes);
 
 app.use((req, res, next) => {
     console.warn(`[404 Not Found] Rota não encontrada: ${req.method} ${req.originalUrl}`);
