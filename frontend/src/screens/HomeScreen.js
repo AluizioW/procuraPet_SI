@@ -36,7 +36,7 @@ export default function HomeScreen() {
     <View style={styles.header}>
       <View style={{ flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'center', flex: 1, marginLeft: 10 }}>
         <Image
-          source={require('../../assets/LOGO2.svg')}
+          source={require('../../assets/LOGO2.png')}
           style={{height: '72px', width:'120px'}}
           resizeMode="contain"
         />
@@ -89,7 +89,7 @@ export default function HomeScreen() {
           
           <View style={styles.titleContainer}>
             <Text style={[styles.title, post.statusPetPostagem === 'desaparecido' ? styles.missing : styles.adoption]}>
-              {post.statusPetPostagem}
+              {post.statusPetPostagem  === 'desaparecido' ? 'Desaparecido' : 'Adoção'}
             </Text>
           </View>
           <View style={styles.description}>
@@ -182,10 +182,13 @@ const styles = StyleSheet.create({
   },
 
   missing: {
+    textTransform: 'uppercase',
     color: '#E74C3C',
   },
 
   adoption: {
+    text: 'Adoção',
+    textTransform: 'uppercase',
     color: '#2ECC71',
   },
 

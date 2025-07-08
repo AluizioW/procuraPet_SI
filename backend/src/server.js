@@ -1,15 +1,15 @@
+require("dotenv").config();
+
 const https = require("https");
 const fs = require("fs");
 const path = require("path"); // Adicione esta linha
-require("dotenv").config();
-
 const app = require('./app'); 
 const db = require('./config/db'); 
 
 const PORT = process.env.PORT || 3000;
 
 const options = {
-  key: fs.readFileSync(path.join(__dirname, "../ssl/server.key")), // ../ sobe da pasta "src" para "api"
+  key: fs.readFileSync(path.join(__dirname, "../ssl/server.key")),
   cert: fs.readFileSync(path.join(__dirname, "../ssl/server.cert")),
 };
 

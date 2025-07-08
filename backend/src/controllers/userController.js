@@ -133,6 +133,33 @@ const loginUsuario = async (req, res, next) => {
     }
 };
 
+const activateUsuario = async (req, res, next) => {
+    const idUsuarioLogado = req.user.idUsuario;
+
+    try {
+        const queryText = `
+            UPDATE usuario 
+            SET statusConta = 'ativo'
+            WHERE idUsuario = ?;
+        `;
+        const usuarios = await db.query(queryText, [idUsuarioLogado]);
+
+        if (usuarios.length === 0) {
+            console.warn(`[User Profile] Usuário não encontrado ao buscar perfil. ID: ${idUsuarioLogado}`);
+            return res.status(404).json({ message: 'Usuário não encontrado.' });
+        }
+        res.status(200).json({
+            message: 'Conta ativada com sucesso.',
+            idUsuario: idUsuarioLogado
+        });
+
+    } catch (error) {
+        console.error(`[User Profile] Erro ao ativar conta do usuário ID ${idUsuarioLogado}: ${error.message}`, { stack: error.stack });
+        error.customMessage = 'Erro no servidor ao ativar conta.';
+        next(error);
+    }
+};
+
 const getMeuPerfil = async (req, res, next) => {
     const idUsuarioLogado = req.user.idUsuario;
 
@@ -157,8 +184,48 @@ const getMeuPerfil = async (req, res, next) => {
     }
 };
 
+const deleteUsuario = async (req, res, next) => {
+  console.log("deleteUsuario chamado");
+  console.log("Authorization header:", req.headers.authorization);
+  console.log("req.user:", req.user);
+
+  const idUsuarioLogado = req.user?.idUsuario;
+  if (!idUsuarioLogado) {
+    return res.status(401).json({ message: "Usuário não autenticado." });
+  }
+
+  try {
+    const queryText = `
+      UPDATE procuraPet_v3.usuario 
+      SET statusConta = 'excluido' 
+      WHERE idUsuario = ?;
+    `;
+
+    const result = await db.query(queryText, [idUsuarioLogado]);
+    console.log("Resultado do update:", result);
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: 'Usuário não encontrado.' });
+    }
+
+    return res.status(200).json({
+      message: 'Conta excluída com sucesso.',
+      idUsuario: idUsuarioLogado
+    });
+
+  } catch (error) {
+    console.error("Erro no deleteUsuario:", error);
+    return res.status(500).json({ message: 'Erro interno.' });
+  }
+};
+
+
+
+
 module.exports = {
     registrarUsuario,
     loginUsuario,
+    activateUsuario,
     getMeuPerfil,
+    deleteUsuario
 };

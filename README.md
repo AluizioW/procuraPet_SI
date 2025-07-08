@@ -22,10 +22,16 @@ Para rodar esse projeto, você vai precisar adicionar as seguintes variáveis de
 
 `JWT_EXPIRES_IN`
 
+`UPLOAD_PRESET`
+
+`CLOUD_NAME`
+
 ### Frontend
 
 `USE_LOCAL`
+
 `API_LOCAL`
+
 `API_IP`
 
 ## Rodar localmente
@@ -33,7 +39,7 @@ Para rodar esse projeto, você vai precisar adicionar as seguintes variáveis de
 Clone o projeto
 
 ```bash
-  git clone https://github.com/AluizioW/procuraPet_SI.git
+  git clone https://github.com/AluizioW/procuraPet_SI
 ```
 
 Entre no diretório do projeto
@@ -91,7 +97,7 @@ Execute:
 
 ## Documentação da API
 
-#### Registrar Usuário
+### Registrar Usuário
 
 ```bash
   POST /api/usuarios/registrar
@@ -101,12 +107,10 @@ Execute:
 | :---------- | :--------- | :---------------------------------- |
 | `nomeUsuario` | `string` | **Obrigatório**. Nome do usuário |
 | `email` | `string` | **Obrigatório**. Email válido |
-| `senha` | `string` | **Obrigatório**. Mínimo 6 caracteres |
-| `username` | `string` | **Obrigatório**. Apelido Único |
-| `telefone` | `string` | **Obrigatório**. Número de telefone |
+| `senha` | `string` | **Obrigatório**. Mínimo 8 caracteres, incluindo letra maiúscula, minúscula, dígitos e símbolos|
 
 
-#### Fazer Login
+### Fazer Login
 
 ```bash
   POST /api/usuarios/login
@@ -118,7 +122,7 @@ Execute:
 | `senha`      | `string` | **Obrigatório**. Senha do usuário|
 
 
-#### Retorna dados do Usuário
+### Retorna dados do Usuário
 
 ```bash
   GET /api/usuarios/meuperfil
@@ -128,14 +132,94 @@ Execute:
 | :---------- | :--------- | :------------------------------------------ |
 | `Authorization`      | `string` | **Obrigatório**. Token JWT no formato "Bearer {token}" |
 
+### Retorna postagens
+
+```bash
+  GET /api/feed/home
+```
+
+| Cabeçalho   | Tipo       | Descrição                                   |
+| :---------- | :--------- | :------------------------------------------ |
+| `-`      | `-` | 	Esta requisição não requer cabeçalhos ou parâmetros específicos. |
+
+
+### Retorna dados da postagem
+
+```bash
+  GET /api/post/:id
+```
+
+| Cabeçalho   | Tipo       | Descrição                                   |
+| :---------- | :--------- | :------------------------------------------ |
+| `id`      | `integer` | **Obrigatório**. Id da postagem" |
+
+
+### Criar postagem
+
+```bash
+  POST /api/post/
+```
+
+| Parâmetro   | Tipo       | Descrição                                   |
+| :---------- | :--------- | :------------------------------------------ |
+| `descricaoPostagem`      | `string` | **Opcional**. Descrição da postagem |
+| `statusPetPostagem`      | `string` | **Obrigatório**. Id da postagem |
+| `recompensa`      | `string` | **Opcional**. Recompensa |
+| `nome`      | `string` | **Opcional**. Nome do pet (se conhecido) |
+| `fotoPet`      | `string` | **Obrigatório**. Foto do pet |
+| `raca`      | `string` | **Opcional**. Raça do pet |
+| `cor`      | `string` | **Obrigatório**. Cor do pet |
+| `especie`      | `string` | **Obrigatório**. Espécie do pet |
+| `sexo`      | `string` | **Obrigatório**. Sexo do pet |
+| `idade`      | `string` | **Opcional**. Idade do pet" |
+
+
+### Editar postagem
+
+```bash
+  PUT /api/post/:id
+```
+
+| Cabeçalho   | Tipo       | Descrição                                   |
+| :---------- | :--------- | :------------------------------------------ |
+| `id`      | `integer` | **Obrigatório**. Id da postagem" |
+
+| Parâmetro   | Tipo       | Descrição                                   |
+| :---------- | :--------- | :------------------------------------------ |
+| `descricaoPostagem`      | `string` | **Opcional**. Descrição da postagem |
+| `statusPetPostagem`      | `string` | **Obrigatório**. Id da postagem |
+| `recompensa`      | `string` | **Opcional**. Recompensa |
+| `nome`      | `string` | **Opcional**. Nome do pet (se conhecido) |
+| `fotoPet`      | `string` | **Obrigatório**. Foto do pet |
+| `raca`      | `string` | **Opcional**. Raça do pet |
+| `cor`      | `string` | **Obrigatório**. Cor do pet |
+| `especie`      | `string` | **Obrigatório**. Espécie do pet |
+| `sexo`      | `string` | **Obrigatório**. Sexo do pet |
+| `idade`      | `string` | **Opcional**. Idade do pet" |
+
+
+### Excluir postagem
+
+```bash
+  PUT /api/post/:id
+```
+
+| Cabeçalho   | Tipo       | Descrição                                   |
+| :---------- | :--------- | :------------------------------------------ |
+| `id`      | `integer` | **Obrigatório**. Id da postagem" |
+
+
 ## Funcionalidades Atuais
-- Cadastrar Usuário
-- Fazer Login
+- Cadastrar usuário
+- Fazer login
 - Verificar dados do usuário
 - Fazer postagem
 - Visualizar postagens
+- Formulário com validação
+- Logout
+- Excluir conta (backend)
+- Ativar conta (backend)
 
-## **Desenvolvido por**: 
+## **Discente**: 
 - [Aluizio Sousa](https://github.com/AluizioW)
-- [Bianca Oliveira](https://github.com/biancakarla)
-- [Kamille Santos](https://github.com/kamillecaetano)
+- [Vídeo](https://drive.google.com/file/d/1BOIGPo3HBGSAD9tVtNmK1A_hQeqmRMLi/view?usp=sharing)

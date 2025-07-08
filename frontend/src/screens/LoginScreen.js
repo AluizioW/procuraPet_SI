@@ -5,15 +5,15 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { API_CONFIG } from '../config';
-
-const logo = require('../../assets/LOGO2.svg');
+import { Ionicons } from '@expo/vector-icons'; 
 
 const LoginScreen = () => {
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [emailError, setEmailError] = useState('');
-  const [passwordError, setPasswordError] = useState('');   
+  const [passwordError, setPasswordError] = useState('');  
+  const [showPassword, setShowPassword] = useState(false); 
 
   const navigation = useNavigation();
   const { login } = useAuth();
@@ -26,6 +26,10 @@ const LoginScreen = () => {
   const validatePassword = (password) => {
     const re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\s]).{8,}$/;
     return re.test(password);
+  };
+
+  const toggleShowPassword = () => {
+    setShowPassword(!showPassword);
   };
   
   const handleLogin = async () => {
@@ -76,12 +80,23 @@ const LoginScreen = () => {
       console.log('Login bem-sucedido!');
 
     } catch (error) {
-      console.log('Erro ao fazer login:');
-      console.error(error.response ? error.response.data : error.message);
-      const errorMessage =
-        error.response?.data?.message || 'Não foi possível fazer login. Verifique suas credenciais.';
+      console.log('Erro ao fazer login:', error);
+      let errorMessage = 'Não foi possível fazer login. Verifique suas credenciais.';
+      
+      if (error.response) {    
+        console.log('Erro detalhado:', {
+          message: error.message,
+          code: error.code,
+          config: error.config,
+          stack: error.stack
+    });
+        errorMessage = error.response.data?.message || errorMessage;
+      } else if (error.request) {
+        errorMessage = 'O servidor não respondeu. Verifique sua conexão.';
+      }
+      
       Alert.alert('Erro no Login', errorMessage);
-    } finally {
+      } finally {
       setIsLoading(false); 
     }
   };
@@ -93,7 +108,7 @@ const LoginScreen = () => {
         style={styles.keyboardView}
       >
         <View style={styles.logoContainer}>
-          <Image source={logo} style={styles.logo} resizeMode="contain" />
+          <Image source={require('../../assets/LOGO2.png')} style={styles.logo} resizeMode="contain" />
         </View>
 
         <Text style={styles.title}>Login</Text>
@@ -116,18 +131,32 @@ const LoginScreen = () => {
           {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
 
           <Text style={styles.label}>Senha</Text>
+          <View style={styles.passwordContainer}>
           <TextInput
-            style={styles.input}
+            style={styles.passwordInput}
             value={senha}
             onChangeText={(text) => {
               setSenha(text);
               setPasswordError('');
             }}
-            secureTextEntry 
+            secureTextEntry={!showPassword}
             placeholder="Digite sua senha"
             placeholderTextColor="#aaa"
+            underlineColorAndroid={'transparent'}
             // returnKeyType="done"
           />
+          <TouchableOpacity 
+              style={styles.eyeIcon} 
+              onPress={toggleShowPassword}
+            >
+              <Ionicons 
+                name={showPassword ? 'eye-off' : 'eye'} 
+                size={24} 
+                color="#7aa68b"
+                
+              />
+          </TouchableOpacity>
+          </View>
           {passwordError ? <Text style={styles.errorText}>{passwordError}</Text> : null}
         </View>
 
@@ -202,6 +231,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 10,
     shadowOffset: { width: 0, height: 5 },
+    marginBottom: 20,
+    marginTop: 20,
   },
   label: {
     fontSize: 16,
@@ -218,11 +249,13 @@ const styles = StyleSheet.create({
     fontSize: 16,
     borderWidth: 1,
     borderColor: '#E8E8E8',
+    
   },
   buttonContainer: {
     width: '100%',
     alignItems: 'center',
     marginBottom: 40,
+    marginTop: 2,
   },
   button: {
     backgroundColor: '#66997b', 
@@ -245,6 +278,25 @@ const styles = StyleSheet.create({
     color: '#ff4444',
     fontSize: 12,
     marginBottom: 15,
+  },
+  passwordContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '100%',
+    backgroundColor: '#f3f8ed',
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#E8E8E8',
+    marginBottom: 20,
+  },
+  passwordInput: {
+    flex: 1,
+    paddingVertical: 15,
+    paddingHorizontal: 20,
+    fontSize: 16,
+  },
+  eyeIcon: {
+    padding: 10
   },
 });
 

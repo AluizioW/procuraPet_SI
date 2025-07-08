@@ -5,7 +5,7 @@ const JWT_SECRET = process.env.JWT_SECRET;
 
 const protect = async (req, res, next) => {
     let token;
-    const authHeader = req.headers.authorization;
+    const authHeader = req.headers.authorization || req.headers.Authorization;
 
     if (authHeader && authHeader.startsWith('Bearer ')) {
         try {

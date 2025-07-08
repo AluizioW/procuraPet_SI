@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, ActivityIndicator, SafeAreaView, Text, StyleSheet } from 'react-native';
+import { View, ActivityIndicator, SafeAreaView, Text, StyleSheet, Image } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -101,6 +101,7 @@ export default function App() {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style="auto" />
+
       <AuthProvider>
         <AppNavigator />
       </AuthProvider>

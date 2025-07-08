@@ -40,6 +40,7 @@ const criarPostagem = async (req, res, next) => {
         await conn.beginTransaction();
 
         //const idUsuarioLogado = req.user.idUsuario;
+
         const idUsuarioLogado = '11'; //Deve ser substituído pelo id do usuário logado, que deve ser obtido do token JWT ou sessão.
         const dataCriacao = new Date().toISOString().slice(0, 19).replace('T', ' ');;
         
